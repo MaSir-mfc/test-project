@@ -13,6 +13,7 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
+            Console.ReadKey();
             var _result = new BaiduSEMApi().Respose();
             Console.WriteLine(_result);
 

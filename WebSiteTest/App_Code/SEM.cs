@@ -30,8 +30,7 @@ public class SEM
         if (string.IsNullOrWhiteSpace(method)) { return HelperTool.Json(false, "method"); }
         if (string.IsNullOrWhiteSpace(timeStr)) { return HelperTool.Json(false, "time参数不能空"); }
         if (string.IsNullOrWhiteSpace(auth)) { return HelperTool.Json(false, "auth参数不能空"); }
-
-        HelperTool.WriteTextLog(auth);
+        
         var _client = new WebClient();
         _client.Headers.Set("accept-encoding", "gzip, deflate");
         _client.Headers.Set("host", new Uri(requestUrl).Host);
