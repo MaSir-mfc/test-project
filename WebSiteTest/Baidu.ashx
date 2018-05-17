@@ -10,12 +10,18 @@ public class Baidu : IHttpHandler
     {
         context.Response.ContentType = "text/plain";
         var _form = context.Request.Form;
-        context.Response.Write("执行结果：");
         string _result = string.Empty;
         switch (context.Request.QueryString["type"])
         {
             case "sem":
-                _result = new SEM().GetResponseData(_form["url"], _form["method"], _form["time"], _form["auth"], System.Text.Encoding.UTF8.GetBytes(_form["param"]));
+                if (_form == null || string.IsNullOrWhiteSpace(_form.ToString()))
+                {
+                    _result = HelperTool.Json(false, "请使用post请求");
+                }
+                else
+                {
+                    _result = new SEM().GetResponseData(_form["url"], _form["method"], _form["time"], _form["auth"], System.Text.Encoding.UTF8.GetBytes(_form["param"]));
+                }
                 break;
             default:
                 break;

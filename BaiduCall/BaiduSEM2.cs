@@ -70,7 +70,7 @@ namespace BaiduCall
         public string Request()
         {
             StringBuilder postData = new StringBuilder();
-            postData.AppendFormat("{0}={1}{2}&", "url", m_domainUrl, m_path);
+            //postData.AppendFormat("{0}={1}{2}&", "url", m_domainUrl, m_path);
             postData.AppendFormat("{0}={1}&", "method", m_method);
             postData.AppendFormat("{0}={1}&", "time", m_timeStr);
             postData.AppendFormat("{0}={1}&", "auth", m_auth);
