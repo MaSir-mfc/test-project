@@ -2,6 +2,7 @@
 
 using System;
 using System.Web;
+using System.Net;
 
 public class Baidu : IHttpHandler
 {

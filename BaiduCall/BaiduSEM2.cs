@@ -35,7 +35,7 @@ namespace BaiduCall
         {
             //从数据库读取配置信息
             string access = "5fc0bc28cb9e47a18930b4a052e4250c",
-                    secret = "34534f37bb024bd3876e27703959ce0b";
+                    secret = "34534f37bb024bd3876e27703959ce0b1";
             Init(access, secret, path);
 
             var _header = new JObject();

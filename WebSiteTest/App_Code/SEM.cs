@@ -39,6 +39,7 @@ public class SEM
         _client.Headers.Set("x-bce-date", timeStr);
         _client.Headers.Set(HttpRequestHeader.Authorization, auth);
         _client.Headers.Set("accept", "*/*");
+
         try
         {
             byte[] _responseData = _client.UploadData(requestUrl, method, param);

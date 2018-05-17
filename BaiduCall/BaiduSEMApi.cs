@@ -40,7 +40,7 @@ namespace BaiduCall
 
                 return _sem.Request();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
