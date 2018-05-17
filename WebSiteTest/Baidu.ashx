@@ -14,13 +14,13 @@ public class Baidu : IHttpHandler
         switch (context.Request.QueryString["type"])
         {
             case "sem":
-                if (_form == null || string.IsNullOrWhiteSpace(_form.ToString()))
+                if (_form != null && !string.IsNullOrWhiteSpace(_form.ToString()))
                 {
-                    _result = HelperTool.Json(false, "请使用post请求");
+                    _result = new SEM().GetResponseData(_form["url"], _form["method"], _form["time"], _form["auth"], System.Text.Encoding.UTF8.GetBytes(_form["param"]));
                 }
                 else
                 {
-                    _result = new SEM().GetResponseData(_form["url"], _form["method"], _form["time"], _form["auth"], System.Text.Encoding.UTF8.GetBytes(_form["param"]));
+                    _result = HelperTool.Json(false, "请使用post请求");
                 }
                 break;
             default:

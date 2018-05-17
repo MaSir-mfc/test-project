@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -30,7 +31,7 @@ public class SEM
         if (string.IsNullOrWhiteSpace(method)) { return HelperTool.Json(false, "method"); }
         if (string.IsNullOrWhiteSpace(timeStr)) { return HelperTool.Json(false, "time参数不能空"); }
         if (string.IsNullOrWhiteSpace(auth)) { return HelperTool.Json(false, "auth参数不能空"); }
-        
+
         var _client = new WebClient();
         _client.Headers.Set("accept-encoding", "gzip, deflate");
         _client.Headers.Set("host", new Uri(requestUrl).Host);
@@ -45,9 +46,8 @@ public class SEM
         }
         catch (WebException ex)
         {
-            throw ex;
-            //var _res = ex.Response as HttpWebResponse;
-            //return new StreamReader(_res.GetResponseStream()).ReadToEnd();
+            var _res = ex.Response as HttpWebResponse;
+            return HelperTool.Json(false, new StreamReader(_res.GetResponseStream()).ReadToEnd());
         }
     }
 }
