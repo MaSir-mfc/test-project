@@ -13,50 +13,7 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-
-            string bucket = "mybucket";
-            string key = "我的文件";
-            string ak = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-            string sk = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
-            DateTime now = DateTime.Now;
-            int expirationInSeconds = 1200;
-
-            HttpWebRequest req = WebRequest.Create("http://bj.bcebos.com/" + bucket + "/" + key) as HttpWebRequest;
-            Uri uri = req.RequestUri;
-            req.Method = "GET";
-
-            string signDate = now.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK");
-            Console.WriteLine(signDate);
-            string authString = "bce-auth-v1/" + ak + "/" + signDate + "/" + expirationInSeconds;
-            string signingKey = Hex(new HMACSHA256(Encoding.UTF8.GetBytes(sk)).ComputeHash(Encoding.UTF8.GetBytes(authString)));
-            Console.WriteLine(signingKey);
-
-            string canonicalRequestString = CanonicalRequest(req);
-            Console.WriteLine(canonicalRequestString);
-
-            string signature = Hex(new HMACSHA256(Encoding.UTF8.GetBytes(signingKey)).ComputeHash(Encoding.UTF8.GetBytes(canonicalRequestString)));
-            string authorization = authString + "/host/" + signature;
-            Console.WriteLine(authorization);
-
-            req.Headers.Add("x-bce-date", signDate);
-            req.Headers.Add(HttpRequestHeader.Authorization, authorization);
-
-            HttpWebResponse res;
-            string message = "";
-            try
-            {
-                res = req.GetResponse() as HttpWebResponse;
-            }
-            catch (WebException e)
-            {
-                res = e.Response as HttpWebResponse;
-                message = new StreamReader(res.GetResponseStream()).ReadToEnd();
-            }
-            Console.WriteLine((int)res.StatusCode);
-            Console.WriteLine(res.Headers);
-            Console.WriteLine(message);
-            Console.ReadLine();
-            //new BaiduSEMApi().Respose();
+            new BaiduSEMApi().Respose();
 
             #region 循环注册极光用户
             //Console.WriteLine("输入开始的用户id，回车继续");
@@ -108,66 +65,5 @@ namespace ConsoleApplication1
             Console.ReadKey();
         }
 
-        static string UriEncode(string input, bool encodeSlash = false)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (byte b in Encoding.UTF8.GetBytes(input))
-            {
-                if ((b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z') || (b >= '0' && b <= '9') || b == '_' || b == '-' || b == '~' || b == '.')
-                {
-                    builder.Append((char)b);
-                }
-                else if (b == '/')
-                {
-                    if (encodeSlash)
-                    {
-                        builder.Append("%2F");
-                    }
-                    else
-                    {
-                        builder.Append((char)b);
-                    }
-                }
-                else
-                {
-                    builder.Append('%').Append(b.ToString("X2"));
-                }
-            }
-            return builder.ToString();
-        }
-
-        static string Hex(byte[] data)
-        {
-            var sb = new StringBuilder();
-            foreach (var b in data)
-            {
-                sb.Append(b.ToString("x2"));
-            }
-            return sb.ToString();
-        }
-
-        static string CanonicalRequest(HttpWebRequest req)
-        {
-            Uri uri = req.RequestUri;
-            StringBuilder canonicalReq = new StringBuilder();
-            canonicalReq.Append(req.Method).Append("\n").Append(UriEncode(Uri.UnescapeDataString(uri.AbsolutePath))).Append("\n");
-
-            var parameters = HttpUtility.ParseQueryString(uri.Query);
-            List<string> parameterStrings = new List<string>();
-            foreach (KeyValuePair<string, string> entry in parameters)
-            {
-                parameterStrings.Add(UriEncode(entry.Key) + '=' + UriEncode(entry.Value));
-            }
-            parameterStrings.Sort();
-            canonicalReq.Append(string.Join("&", parameterStrings.ToArray())).Append("\n");
-
-            string host = uri.Host;
-            if (!(uri.Scheme == "https" && uri.Port == 443) && !(uri.Scheme == "http" && uri.Port == 80))
-            {
-                host += ":" + uri.Port;
-            }
-            canonicalReq.Append("host:" + UriEncode(host));
-            return canonicalReq.ToString();
-        }
     }
 }
