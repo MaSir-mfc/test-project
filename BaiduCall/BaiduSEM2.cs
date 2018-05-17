@@ -31,7 +31,23 @@ namespace BaiduCall
 {
     public class BaiduSEM2
     {
-        public BaiduSEM2(string access, string secret, string path, string method = "POST")
+        public BaiduSEM2(long accountId, string path)
+        {
+            //从数据库读取配置信息
+            string access = "5fc0bc28cb9e47a18930b4a052e4250c",
+                    secret = "34534f37bb024bd3876e27703959ce0b";
+            Init(access, secret, path);
+
+            var _header = new JObject();
+            _header["opUsername"] = "baidu-天下商机2140059-1219";
+            _header["opPassword"] = "Txsj2015617";
+            _header["tgUsername"] = "baidu-天下商机2140059-1219";
+            _header["tgPassword"] = "Txsj2015617";
+            _header["bceUser"] = "7a128075d1de45e4b897ae3191e851eb";
+            this.HeaderData = _header;
+        }
+
+        public void Init(string access, string secret, string path, string method = "POST")
         {
             m_timeStr = DateTime.Now.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ssK");
             m_access = access;
@@ -43,47 +59,34 @@ namespace BaiduCall
         }
 
         private string m_access, m_secret, m_method, m_url, m_path, m_auth, m_timeStr
-            , m_expirationSeconds = "1800", m_signatureHeaders = "host";
+            , m_expirationSeconds = "1800";
 
         const string m_host = "sem.baidubce.com";
         const string m_domainUrl = "http://sem.baidubce.com/v1/feed/cloud/";
+        const string m_baiduYunUrl = "http://180.76.59.199/baidu.ashx?type=sem";
 
-        public JObject BodyData { get; set; }
-        public string opUsername { get; set; }
-        public string tgUsername { get; set; }
-        public string bceUser { get; set; }
-        public string opPassword { get; set; }
-        public string tgPassword { get; set; }
-
-        public string Response()
+        public JObject HeaderData;
+        public JObject BodyData;
+        public string Request()
         {
-            var _header = new JObject();
-            _header["opUsername"] = opUsername;
-            _header["tgUsername"] = tgUsername;
-            _header["bceUser"] = bceUser;
-            _header["opPassword"] = opPassword;
-            _header["tgPassword"] = tgPassword;
-
-            var _data = new JObject();
-            _data["body"] = BodyData;
-            _data["header"] = _header;
-
-            return GetResponseData(Encoding.UTF8.GetBytes(_data.ToString()));
-        }
-
-        public string GetResponseData(byte[] param)
-        {
+            StringBuilder postData = new StringBuilder();
+            postData.AppendFormat("{0}={1}{2}&", "url", m_domainUrl, m_path);
+            postData.AppendFormat("{0}={1}&", "method", m_method);
+            postData.AppendFormat("{0}={1}&", "time", m_timeStr);
+            postData.AppendFormat("{0}={1}&", "auth", m_auth);
+            if (HeaderData != null)
+            {
+                var _data = new JObject();
+                if (BodyData != null) _data["body"] = BodyData;
+                _data["header"] = HeaderData;
+                postData.AppendFormat("{0}={1}", "param", _data.ToString());
+            }
             var _client = new WebClient();
-            _client.Headers.Set("accept-encoding", "gzip, deflate");
-            _client.Headers.Set("host", m_host);
-            _client.Headers.Set("content-type", "application/json");
-            _client.Headers.Set("x-bce-date", m_timeStr);
-            _client.Headers.Set(HttpRequestHeader.Authorization, m_auth);
-            _client.Headers.Set("accept", "*/*");
+            _client.Headers.Set("content-type", "application/x-www-form-urlencoded");
             try
             {
-                byte[] _responseData = _client.UploadData(m_url, m_method, param);
-                return Encoding.UTF8.GetString(_responseData);//解码   
+                var _result = _client.UploadData(m_baiduYunUrl, System.Text.Encoding.UTF8.GetBytes(postData.ToString()));
+                return Encoding.UTF8.GetString(_result);
             }
             catch (WebException ex)
             {
@@ -91,30 +94,8 @@ namespace BaiduCall
                 //var _res = ex.Response as HttpWebResponse;
                 //return new StreamReader(_res.GetResponseStream()).ReadToEnd();
             }
-
-            //HttpWebRequest _req = WebRequest.Create(m_url) as HttpWebRequest;
-            //_req.Method = m_method;
-            //_req.Headers.Set("accept-encoding", "gzip, deflate");
-            //_req.Headers.Set("host", m_host);
-            //_req.Headers.Set("content-type", "application/json");
-            //_req.Headers.Set("x-bce-date", m_timeStr);
-            //_req.Headers.Set(HttpRequestHeader.Authorization, m_auth);
-            //_req.Headers.Set("accept", "*/*");
-
-            //_req.ContentLength = param.Length;
-            //Stream _writer = _req.GetRequestStream();
-            //_writer.Write(param, 0, param.Length);
-            //_writer.Close();
-            //try
-            //{
-            //    return _req.GetResponse() as HttpWebResponse;
-            //}
-            //catch (WebException ex)
-            //{
-            //    return ex.Response as HttpWebResponse;
-            //    //message = new StreamReader(_res.GetResponseStream()).ReadToEnd();
-            //}
         }
+
 
         public string GenAuth()
         {
@@ -126,7 +107,12 @@ namespace BaiduCall
             string _authorization = string.Format("{0}/host/{1}", _authString, _signature);
             return _authorization;
         }
-
+        /// <summary>
+        /// 地址字符编码
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="encodeSlash"></param>
+        /// <returns></returns>
         static string UriEncode(string input, bool encodeSlash = false)
         {
             StringBuilder builder = new StringBuilder();
@@ -155,6 +141,11 @@ namespace BaiduCall
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 数据转换成十六进制
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         static string Hex(byte[] data)
         {
             var sb = new StringBuilder();
@@ -164,7 +155,12 @@ namespace BaiduCall
             }
             return sb.ToString();
         }
-
+        /// <summary>
+        /// 组建url请求地址
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
         static string CanonicalRequest(Uri uri, string method)
         {
             StringBuilder canonicalReq = new StringBuilder();

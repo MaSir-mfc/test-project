@@ -8,7 +8,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WebSiteTest", "WebSiteTest\", "{E2DCCB4F-E607-4B31-B041-00D8AEB40D0D}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
-		ProjectReferences = "{269ed3ce-4636-4a4d-a96b-6128fa1bf51b}|BaiduCall.dll;"
+		ProjectReferences = ""
 		Debug.AspNetCompiler.VirtualPath = "/localhost_10800"
 		Debug.AspNetCompiler.PhysicalPath = "WebSiteTest\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_10800\"

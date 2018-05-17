@@ -13,7 +13,8 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            new BaiduSEMApi().Respose();
+            var _result = new BaiduSEMApi().Respose();
+            Console.WriteLine(_result);
 
             #region 循环注册极光用户
             //Console.WriteLine("输入开始的用户id，回车继续");

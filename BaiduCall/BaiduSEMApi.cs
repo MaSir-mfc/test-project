@@ -32,19 +32,13 @@ namespace BaiduCall
         {
             try
             {
-                string access = "5fc0bc28cb9e47a18930b4a052e4250c",
-                    secret = "34534f37bb024bd3876e27703959ce0b",
-                    path = "AccountFeedService/getAccountFeed";
-                BaiduSEM2 _sem = new BaiduSEM2(access, secret, path);
-                _sem.opUsername = "baidu-天下商机2140059-1219";
-                _sem.opPassword = "Txsj2015617";
-                _sem.tgUsername = "baidu-天下商机2140059-1219";
-                _sem.tgPassword = "Txsj2015617";
-                _sem.bceUser = "7a128075d1de45e4b897ae3191e851eb";// "3b4545ae2703599d325b26fdcfd61d99";
+                string _path = "AccountFeedService/getAccountFeed";
+                BaiduSEM2 _sem = new BaiduSEM2(0, _path);
                 var _json = new JObject();
                 _json["accountFeedFields"] = JArray.FromObject(new string[] { "userId", "balance", "budget", "balancePackage", "userStat" });
                 _sem.BodyData = _json;
-                return _sem.Response();
+
+                return _sem.Request();
             }
             catch (Exception)
             {
