@@ -10,15 +10,17 @@ public class Baidu : IHttpHandler
     public void ProcessRequest(HttpContext context)
     {
         context.Response.ContentType = "text/plain";
-        context.Response.Write("Hello World");
+        context.Response.Write("执行结果：");
+        string _result = string.Empty;
         switch (context.Request.QueryString["type"])
         {
             case "sem":
-                new BaiduSEMApi().Respose();
+                _result = new BaiduSEMApi().Respose();
                 break;
             default:
                 break;
         }
+        context.Response.Write(_result);
     }
 
     public bool IsReusable
