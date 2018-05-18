@@ -46,8 +46,10 @@
   <ItemGroup>
     <Compile Include="BaiduSEM.cs" />
     <Compile Include="BaiduSEM2.cs" />
-    <Compile Include="BaiduSEMApi.cs" />
+    <Compile Include="BaiduApi.cs" />
+    <Compile Include="HelperTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TsdbClient.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

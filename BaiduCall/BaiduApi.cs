@@ -25,25 +25,33 @@ using System.Threading.Tasks;
 
 namespace BaiduCall
 {
-    public class BaiduSEMApi
+    public class BaiduApi
     {
 
-        public string Respose()
+        public string SEM()
         {
             try
             {
-                string _path = "AccountFeedService/getAccountFeed";
-                BaiduSEM2 _sem = new BaiduSEM2(0, _path);
                 var _json = new JObject();
                 _json["accountFeedFields"] = JArray.FromObject(new string[] { "userId", "balance", "budget", "balancePackage", "userStat" });
+
+                string _path = "AccountFeedService/getAccountFeed";
+                BaiduSEM2 _sem = new BaiduSEM2(0, _path);
                 _sem.BodyData = _json;
 
                 return _sem.Request();
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
+        }
+
+        public string Tsdb()
+        {
+
+
+            return null;
         }
     }
 }

@@ -17,7 +17,17 @@ public class Baidu : IHttpHandler
             case "sem":
                 if (_form != null && !string.IsNullOrWhiteSpace(_form.ToString()))
                 {
-                    _result = new SEM().GetResponseData(_form["url"], _form["method"], _form["time"], _form["auth"], System.Text.Encoding.UTF8.GetBytes(_form["param"]));
+                    try
+                    {
+                        HelperTool.WriteTextLog(_form["url"]);
+                        _result = HelperTool.GetResponseData(new Uri(_form["url"]), _form["method"], _form["time"]
+                            , _form["auth"], System.Text.Encoding.UTF8.GetBytes(_form["param"]));
+                    }
+                    catch (WebException ex)
+                    {
+                        var _res = ex.Response as HttpWebResponse;
+                        _result = HelperTool.Json(false, new System.IO.StreamReader(_res.GetResponseStream()).ReadToEnd());
+                    }
                 }
                 else
                 {

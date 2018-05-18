@@ -13,7 +13,7 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            var _result = new BaiduSEMApi().Respose();
+            var _result = new BaiduApi().SEM();
             Console.WriteLine(_result);
 
             #region 循环注册极光用户
